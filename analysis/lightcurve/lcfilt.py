@@ -1,7 +1,9 @@
 #!/usr/bin/python
 #
 # Author: David Khatami <dkhatami@astro.berkeley.edu>
+#         Chelsea Harris
 # Date: 10/4/18
+#       2018-12-04
 #
 #
 # Instructions:
@@ -25,15 +27,17 @@
 #  See the doc/manual.pdf in the FSPS github for how the magnitudes are defined
 #
 
-import sys, getopt
 import h5py
 import numpy as np
 from scipy.interpolate import interp1d
 from scipy import integrate as integrate
 
-# The path here according to whatever called lcfilt, for finding files:
+# The path here according to whatever called this module, for finding data files:
 my_loc = '/'.join(__file__.split('/')[:-1])+'/'
+filter_data_loc = my_loc + '../../data/lightcurve_filters/'
 
+filter_list_fn = filter_data_loc + 'filter_list.txt'
+all_filter_table_fn = filter_data_loc + 'all_filters.dat'
 
 class Filter:
 
@@ -42,12 +46,12 @@ class Filter:
     def __init__(self):
         self.Bands = {}
         self.FilterDatasets = [[]]
-        with open(my_loc+'FILTER_LIST') as f:
+        with open(filter_list_fn) as f:
             for line in f:
                 dat = line.split()
                 self.Bands[dat[1]] = int(dat[0])
 
-        with open(my_loc+'allfilters.dat') as f:
+        with open(all_filter_table_fn) as f:
             for line in f:
                 if line.startswith('#'):
                     if self.FilterDatasets[-1] != ():
@@ -153,41 +157,33 @@ class LightCurve:
         header_arr = "Time (Days) \t Lbol (erg/s) \t Mbol \t  {} \n All magnitudes are given in the AB Magnitude System".format('\t'.join(map(str,tuple(bands))))
         np.savetxt(filename,dat_arr,header=header_arr,fmt='%.6e')
     
-    
-def main(argv):
-    specfile = ''
-    bands = ''
-    try:
-        opts, args = getopt.getopt(argv,"s:b:",["bands"])
-    except getopt.GetoptError:
-        print('lcfilt.py -s <spectrum.h5> -b <band1,band2,...>')
-    for opt,arg in opts:
-        if opt == "--bands":
-            filt = Filter()
-            bands = tuple(filt.Bands)
-            print('-----------------------------')
-            print('List of Available Filters:')
-            print('-----------------------------')
-            for b in bands:
-                print(b)
-            print('-----------------------------')
-            print('See file FILTER_LIST for details/references')
-            print('-----------------------------')
-            sys.exit(0)
-        elif opt == "-s":
-            specfile = arg
-        elif opt == "-b":
-             bands = arg
-    print("Filename: {}".format(specfile))
-    print("Bands: {}".format(bands))
-    lc = LightCurve(specfile)
-    lc.write_bands(bands.split(','))
-    print("Output written to {}".format("lightcurve.out"))
 
-if __name__ == "__main__":
-	main(sys.argv[1:])
+def lightcurve_from_spectrum(spectrum_fn='', bands=(), out_fn='lightcurve.dat', verbose=False):
+    """
+    Makes the light curves in a set of photometric passbands from a
+    time series of spectra.
+    INPUTS
+    specfile : string        path to the spectrum time series as a relative path from the current working
+                             directory or as an absolute path
+    bands    : string-tuple  desired photometric passbands
+    """
+
+    # We need to put an assert statement here like
+    # assert slib.get_file_type(specfile) == 'HDF5'
+
+    lc = LightCurve(spectrum_fn)
+    lc.write_bands(bands)
+
+    if verbose:
+        print("Filename: {}".format(specfile))
+        print("Bands: {}".format(bands))
+        print("Output written to "+out_fn)
 
 
 
+def print_avialable_bands():
+    filt = Filter()
+    print(', '.join(tuple(filt.Bands)))
+    print('See {} for details and references.'.format(filter_list_filename))
 
     
