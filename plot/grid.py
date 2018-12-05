@@ -3,7 +3,7 @@
 # Authors: Dan Kasen, Chelsea Harris
 # Date: 2018-12-04
 # 
-# Purpose: Tools for plotting grid files
+# Purpose: Tools for plotting Sedona `grid` output files
 #         
 
 import h5py
@@ -14,7 +14,7 @@ cLightSpeed = 3e10
 cAngPerCm = 1e8
 
 def plot_grid(grid_fn,
-              which_log='', zone_num=0, quantity='opacity', plot_nu=False, xlim=, ylim=, ls=, ):
+              which_log='', zone_num=0, quantity='opacity', plot_nu=False, xlim=(), ylim=(), ls='-' ):
 
   quantity_labels = {'opacity'   :'opacity (cm^2/g)',
                      'emissivity':'emissivity',
