@@ -1,0 +1,8 @@
+#
+# Authors: Chelsea Harris
+# Date 2018-12-05
+#
+# Purpose: 
+# These functions will understand how to give a grid or specrum
+# what it needs from a given Sedona output accounting for the Sedona
+# version and file type
