@@ -1,6 +1,0 @@
-class Grid(object):
-  """
-  Stores information from the grid files, about the zone properties
-  needed for plotting.
-  """
-  def __init__():
