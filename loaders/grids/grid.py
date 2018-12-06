@@ -96,6 +96,8 @@ class Cartesian3dGrid(Grid):
         self.v[1] = self.assistant.pull_one('vy')
         self.v[2] = self.assistant.pull_one('vz')
 
+        self.rmin = self.assistant.pull_one('rmin')
+
     def calc_zone_volume(self):
         # volume is a uniform scalar
         vols = np.prod(self.dr)
