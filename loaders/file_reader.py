@@ -88,3 +88,11 @@ class HDF5Reader(SimReader):
 
     def list_fields(self):
         return list(self.data.keys())
+
+
+def choose_reader(filename):
+    file_type = filename.split('.')[-1]
+    if file_type in ('h5','hdf5'):
+        return HDF5Reader()
+    else:
+        return SimReader()
