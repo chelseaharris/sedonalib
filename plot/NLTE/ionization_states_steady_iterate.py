@@ -12,7 +12,7 @@ warnings.simplefilter(action='ignore', category=FutureWarning)
 import h5py
 import numpy as np
 import matplotlib
-matplotlib.use("agg")
+#matplotlib.use("agg")
 import matplotlib.pyplot as plt
 from matplotlib import cm
 import sys
@@ -73,19 +73,28 @@ n_zones = len(np.array(fin['r']))
 
 # Get list of elements and their ionization states
 elements = []
-n_ionization_states = []
-# Get list of elements
+# Get list of elements and ionization stages
+
+element_ion_stage_indices = []
+
 for groupname in fin['/zonedata/0'].iterkeys():
     if (groupname[0] == 'Z'):
         elements.append(str(groupname))
-        n_ionization_states.append(int(len(fin['/zonedata/0/' + str(groupname) + '/ion_fraction'] )))
+        ion_stage_indices = []
+        max_ion_stages = len(fin['/zonedata/0/' + str(groupname) + '/ion_fraction'] )
+        sample_ion_fractions = np.array((fin['/zonedata/0/' + str(groupname) + '/ion_fraction'] ))
+        for ion_stage in range(max_ion_stages):
+            if (sample_ion_fractions[ion_stage] > -1):
+                ion_stage_indices.append(ion_stage)
+        element_ion_stage_indices.append(ion_stage_indices)
+
 n_elements = len(elements)
 
 # Assemble data container
 state_array = []
 for element_index in range(n_elements):
 
-    state_array.append( np.zeros((n_blocks,n_zones,n_ionization_states[element_index])) )
+    state_array.append( np.zeros((n_blocks,n_zones,len(element_ion_stage_indices[element_index]))))
 
 
 ### Read in data ###
@@ -96,8 +105,8 @@ for block_index in range(len(filenames)):
         for z_index in range(n_zones):
             name = '/zonedata/' + str(z_index) + '/'
             for element_index in range(n_elements):
-                state_array[element_index][block_index,z_index,::] += np.array(fin[name + str(elements[element_index]) + '/ion_fraction']) / len(filenames[block_index])
-    #state_array[element_index][block_index,::] /= len(filenames[block_index])
+                for ion_stage_index in element_ion_stage_indices[element_index]:
+                    state_array[element_index][block_index,z_index,ion_stage_index] += np.array(fin[name + str(elements[element_index]) + '/ion_fraction'])[ion_stage_index] / len(filenames[block_index])
 
 ### plotting ###
 
@@ -107,12 +116,13 @@ for element_index in range(n_elements):
     for block_index in range(n_blocks):
         alpha_value += 1./(n_blocks)
         color_index = 0
-        for ion_stage in range(n_ionization_states[element_index]):
+        #for ion_stage in range(n_ionization_stages[element_index]):
+        for ion_stage in element_ion_stage_indices[element_index]:
             if (block_index == n_blocks - 1):
                 this_label = str(ion_stage+1)
             else:
                 this_label = '_nolegend_'
-            plt.plot(np.log10(state_array[element_index][block_index,::,ion_stage]),label=this_label,alpha=alpha_value,c = cm.jet(int(color_index * 255./float(n_ionization_states[element_index] - 1.))))
+            plt.plot(np.log10(state_array[element_index][block_index,::,ion_stage]),label=this_label,alpha=alpha_value,c = cm.jet(int(color_index * 255./float( len(element_ion_stage_indices[element_index]) - 1. ))))
             color_index += 1
 
     plt.suptitle(elements[element_index] + ' ion fraction')
@@ -121,7 +131,7 @@ for element_index in range(n_elements):
     plt.xlabel("zone number")
     plt.ylabel("log10(occupation fraction)")
     plt.savefig(elements[element_index] + '_ion_fraction.pdf')
-    #plt.show()
+    plt.show()
     plt.close()
 
 
