@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 
 import sys
 sys.path.append('..')
-import loaders.file_reader as fread
-import physical_constants as C
+import ..loaders.file_reader as fread
+import ..data.physical_constants as C
 
 
 def plot_grid(grid_fn,

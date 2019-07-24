@@ -9,7 +9,7 @@ import numpy as np
 import h5py
 
 import ..loaders.grid as gload
-import ..physical_constants as C
+import ..data.physical_constants as C
 
 def plot_1d(filename):
   print('No plotting functionality for 1D models.')
