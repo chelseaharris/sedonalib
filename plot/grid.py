@@ -22,52 +22,48 @@ def plot_grid(grid_fn,
                        'emissivity':'emissivity',
                        'Jnu'       :'radiation field Jnu (ergs/s/Hz/cm^2/str)'}
 
-    y_field = 'zonedata/{}/{}'.format(zone_num,quantity)
-
-    assistant = fread.choose_reader(grid_fn)
-
-
     # Load the grid
-    with h5py.File(grid_fn,'r') as data:
-        # path in the HDF5 file
+    assistant = fread.choose_reader(grid_fn)
+    assistant.open(grid_fn)
+  
+    # Get frequency for x-axis
+    nu = np.array(assistant.pull_one(['nu']))
+  
+    # Get quantity to plot for y-axis
+    if quantity=='Snu':
         zone = 'zonedata/{}'.format(zone_num)
-      
-        # Get frequency for x-axis
-        nu = np.array(data['nu'])
-      
-        # Get quantity to plot for y-axis
-        if quantity=='Snu':
-            opac = np.array(data[zone+'/opacity'])
-            emis = np.array(data[zone+'/emissivity'])
-            vals = emis/opac
-        else:
-            vals = np.array(data[zone + '/' + type])
-      
-        # Plot
-        if plot_nu:
-            plt.plot(nu, vals, ls=ls)
-        else:
-            # Convert from frequency to wavelength if desired
-            lm = C.LIGHT_SPEED*nu/C.ANG_PER_CM
-            plt.plot(lm, vals, ls=ls)
-        
-        if quantity in quantity_labels.keys():
-            ylabel = quantity_labels[quantity]
-        else:
-            ylabel = quantity
-      
-        if 'x' in which_log:
-            plt.xscale('log')
-        if 'y' in which_log:
-            plt.yscale('log')
-      
-        if len(xlim)==2:
-            plt.xlim(xlim)
-        
-        if len(ylim)==2:
-            plt.ylim(ylim)
-      
-        plt.ion()
-        plt.show()
+        opac = np.array(assistant.pull_one(zone+'/opacity'))
+        emis = np.array(assistant.pull_one(zone+'/emissivity'))
+        vals = emis/opac
+    else:
+        y_field = 'zonedata/{}/{}'.format(zone_num,quantity)
+        vals = np.array(assistant.pull_one(y_field))
+  
+    # Plot
+    if plot_nu:
+        plt.plot(nu, vals, ls=ls)
+    else:
+        # Convert from frequency to wavelength if desired
+        lm = C.LIGHT_SPEED*nu/C.ANG_PER_CM
+        plt.plot(lm, vals, ls=ls)
+    
+    if quantity in quantity_labels.keys():
+        ylabel = quantity_labels[quantity]
+    else:
+        ylabel = quantity
+  
+    if 'x' in which_log:
+        plt.xscale('log')
+    if 'y' in which_log:
+        plt.yscale('log')
+  
+    if len(xlim)==2:
+        plt.xlim(xlim)
+    
+    if len(ylim)==2:
+        plt.ylim(ylim)
+  
+    plt.ion()
+    plt.show()
 
 
