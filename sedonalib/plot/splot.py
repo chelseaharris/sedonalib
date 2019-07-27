@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+
+from __future__ import print_function
  
 import bisect
 import optparse
@@ -79,7 +81,7 @@ for i in range(n):
         
       for thist in (opts.plottime).split(','):
         indt = bisect.bisect(times,float(thist))
-        print 'time = ',thist,indt
+        print('time = {}{}'.format(thist,indt))
         py.plot(nu,Lnu[indt,:])
         
       py.ylabel('specific luminosity')

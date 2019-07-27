@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 from numpy import pi, sin
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,7 +10,7 @@ import bisect
 
 def get_spec(time,Lnu,tget):
 	indt = bisect.bisect(time,float(tget))
-	print tget,indt
+	print("{}{}".format(tget,indt))
 	return Lnu[indt,:]
 
 # read spectrum data

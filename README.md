@@ -19,3 +19,13 @@ Library Organization:
 * loaders
   Backend component. Contains classes for loading Sedona output into
   data structures for calculations.
+
+Package Installation:
+
+To install sedonalib as a local python package, in this directory run:
+
+`python setup.py install --user`
+
+Or to use Python 3:
+
+`python3 setup.py install --user`
