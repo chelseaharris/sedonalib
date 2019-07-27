@@ -3,6 +3,8 @@
 # Python script for plotting up sedona plot files
 #
 
+from __future__ import print_function
+
 import optparse
 import matplotlib.pyplot as py
 import numpy as np
@@ -30,7 +32,7 @@ ndims = len(rho.shape)
 #-------- 1D spherical model ----
 #--------------------------------
 if (ndims == 1):
-	print 'hi'
+	print('hi')
 
 #--------------------------------
 #-------- 2D clyndrical model ----
@@ -60,15 +62,15 @@ if (ndims == 2):
 			for k in range(len(Z)):
 				cmass[k] += rho[i,j]*vol*comp[i,j,k]
 
-	print '-----------------------------------------------------------'
-	print 'dimensions; (nx,nz) = (',nx,',',nz,')'
-	print ('zonesizes:  (dx,dz) = ({0:.4e}, {1:.4e})'.format(dr[0],dr[1]))
+	print('-----------------------------------------------------------')
+	print('dimensions; (nx,nz) = ({},{})'.format(nx,nz))
+	print('zonesizes:  (dx,dz) = ({0:.4e}, {1:.4e})'.format(dr[0],dr[1]))
 	print('mass = {0:.4e} grams ({1:.4e} m_sun)'.format(mass,mass/m_sun))
 	print('ke   = {0:.4e}  ergs'.format(ke))
 	for k in range(len(Z)):
-		print 'elem ' +str(Z[k]) + '.' + str(A[k]),
+		print('elem {}.{}'.format(Z[k], A[k])),
 		print(': mass = {0:.4e} grams ({1:.4e} m_sun)'.format(cmass[k],cmass[k]/m_sun))
-	print '-----------------------------------------------------------'
+	print('-----------------------------------------------------------')
 
 	rho = np.swapaxes(rho,0,1)
 	py.matshow(np.log10(rho))
@@ -143,16 +145,16 @@ if (ndims == 3):
 				for l in range(len(Z)):
 					cmass[l] += rho[i,j,k]*vol*comp[i,j,k,l]
 
-	print '-----------------------------------------------------------'
-	print  'dimensions; (nx,ny,nz) = (',nx,',',ny,',',nz,')'
-	print ('zonesizes:  (dx,dy,dz) = ({0:.4e}, {1:.4e},{2:.4e})'.format(dr[0],dr[1],dr[2]))
-	print ('min_pos:    (x0,y0,z0) = ({0:.4e}, {1:.4e},{2:.4e})'.format(rmin[0],rmin[1],rmin[2]))
+	print('-----------------------------------------------------------')
+	print('dimensions; (nx,ny,nz) = ({},{},{})'.format(nx,ny,nz))
+	print('zonesizes:  (dx,dy,dz) = ({0:.4e}, {1:.4e},{2:.4e})'.format(dr[0],dr[1],dr[2]))
+	print('min_pos:    (x0,y0,z0) = ({0:.4e}, {1:.4e},{2:.4e})'.format(rmin[0],rmin[1],rmin[2]))
 	print('mass = {0:.4e} grams ({1:.4e} m_sun)'.format(mass,mass/m_sun))
 	for k in range(len(Z)):
-		print 'elem ' +str(Z[k]) + '.' + str(A[k]),
+		print('elem {}.{}'.format(Z[k], A[k])),
 		print(': mass = {0:.4e} grams ({1:.4e} m_sun)'.format(cmass[k],cmass[k]/m_sun))
 	print('ke   = {0:.4e}  ergs'.format(ke))
-	print '-----------------------------------------------------------'
+	print('-----------------------------------------------------------')
 
 	py.matshow(np.log10(rho[:,:,nx/2]))
 	py.colorbar()
