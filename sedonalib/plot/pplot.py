@@ -3,6 +3,8 @@
 # Python script for plotting up plot files
 #
 
+from __future__ import print_function
+
 import optparse
 import matplotlib.pyplot as py
 import numpy as np
@@ -39,7 +41,7 @@ py.ion()
 if (ndims == 1):
 
   for i in range(nfiles):
-    print args[i]
+    print(args[i])
 
   if (opts.log == 'y'): py.yscale('log')
   if (opts.log == 'x'): py.xscale('log')

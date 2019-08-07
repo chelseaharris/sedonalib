@@ -9,10 +9,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import sys
-sys.path.append('..')
-import ..loaders.file_reader as fread
-import ..data.physical_constants as C
+from sedonalib.loaders import choose_reader
+import sedonalib.data.physical_constants as C
 
 
 def plot_grid(grid_fn,
@@ -23,7 +21,7 @@ def plot_grid(grid_fn,
                        'Jnu'       :'radiation field Jnu (ergs/s/Hz/cm^2/str)'}
 
     # Load the grid
-    assistant = fread.choose_reader(grid_fn)
+    assistant = choose_reader(grid_fn)
     assistant.open(grid_fn)
   
     # Get frequency for x-axis

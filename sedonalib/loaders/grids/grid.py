@@ -1,4 +1,4 @@
-import ..file_reader as fread
+from sedonalib.loaders import choose_reader
 
 class Grid(object):
     """

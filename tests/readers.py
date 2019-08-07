@@ -1,16 +1,12 @@
-import sys
-sys.path.append('..')
-import loaders.file_reader as rd
-
-
+from sedonalib.loaders import SimReader, HDF5Reader
 
 def test_hdf5_reader():
     test_file = 'example_output/SNIa/weizmann_toy_hiNi/spectrum_final.h5'
 
-    butler = rd.SimReader() 
+    butler = SimReader()
     print("Hello, I'm an {}, here to assist you.".format(repr(type(butler))))
 
-    butler = rd.HDF5Reader()
+    butler = HDF5Reader()
     print("Hello, I'm an {}, here to assist you.".format(repr(type(butler))))
 
     butler.open(test_file)

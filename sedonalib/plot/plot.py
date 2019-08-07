@@ -4,12 +4,14 @@
 # 
 # Purpose: Plot Sedona `plot` output files
 
+from __future__ import print_function
+
 import matplotlib.pyplot as plt
 import numpy as np
 import h5py
 
-import ..loaders.grid as gload
-import ..data.physical_constants as C
+from sedonalib.loaders.grid import CylindricalGrid, Cartesian3dGrid
+import sedonalib.data.physical_constants as C
 
 def plot_1d(filename):
   print('No plotting functionality for 1D models.')
@@ -20,7 +22,7 @@ def plot_2d(filename, verbose=False):
   """
   Assumes cylindrical grid
   """
-  grid = gload.CylindricalGrid(filename)
+  grid = CylindricalGrid(filename)
 
   mass = grid.calc_total_mass()
   species_mass = grid.calc_total_species_mass()
@@ -32,7 +34,7 @@ def plot_2d(filename, verbose=False):
   	print('mass = {0:.4e} grams ({1:.4e} M_sun)'.format(mass,mass/C.M_SUN))
   	print('E_kin  = {0:.4e}  ergs'.format(grid.calc_total_kinetic_energy()))
   	for k in range(len(Z)):
-  		print 'elem ' +str(Z[k]) + '.' + str(A[k]),
+  		print('elem {}.{}'.format(Z[k], A[k])),
   		print(': mass = {0:.4e} grams ({1:.4e} M_sun)'.format(species_mass[k],species_mass[k]/C.M_SUN))
   	print('-----------------------------------------------------------')
   
@@ -60,7 +62,7 @@ def plot_3d(filename):
   """
   Assumes Cartesian grid
   """
-  grid = gload.Cartesian3dGrid(filename)
+  grid = Cartesian3dGrid(filename)
 
   # calculate integrated quantities
   mass = grid.calc_total_mass()
